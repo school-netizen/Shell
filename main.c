@@ -66,6 +66,7 @@ int repl(){
                     break;
                 token=strtok(NULL,":");
             }
+            free(path_copy);
             if(!isExe){
                 printf("%s: not found",typeOF);
             }
@@ -98,6 +99,7 @@ int repl(){
             if(isOLDpath=='y'){
                 strcpy(old_path,curr_dir);
             }
+            free(curr_dir);
         }
    }
    else{
