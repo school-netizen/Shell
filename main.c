@@ -52,24 +52,6 @@ int repl(){
             int isExe=0;
             struct dirent *entry;
 
-//            while(token){
-//                DIR *dir=opendir(token);
-//                while(entry=readdir(dir)){
-//                    if(!strcmp(entry->d_name,typeOF)){
-//                        printf("%s is %s/%s",typeOF,token,typeOF);
-//                        isExe=1;
-//                    }
-//                    if(isExe){
-//                        break;
-//                    }
-//                }
-//                closedir(dir);
-//
-//                if(isExe){
-//                    break;
-//                }
-//                token=strtok(NULL,":");
-//            }
             while(token){
                 DIR *dir=opendir(token);
                 while(entry=readdir(dir)){
