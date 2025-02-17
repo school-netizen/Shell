@@ -4,7 +4,7 @@
 #include <dirent.h>
 #include <unistd.h>
 //int repl(char[]);
-char isOLDpath='n';
+//char isOld='n';
 char old_path[100]={0};
 int repl();
 int echo(char[]);
@@ -74,34 +74,37 @@ int repl(){
        printf("\n"); 
     }else if(!strcmp(input,"pwd")){
         printf("%s\n",getcwd(NULL,0));
-    }else if(!strncmp(input,"cd ",3)){
+    }
+    else if(!strncmp(input,"cd ",3)){
         char dir[cmd_len-3];
         strcpy(dir,input+3);
 
-        if(!strcmp(dir,"-")&&isOLDpath=='n'){
-            printf("Old path not set\n");
+        char *curr_dir=getcwd(NULL,0);
+      //instead of using isOld we can use old_path[0] value since it is filled only with the cd is successfull  
+        if(!strcmp(dir,"-")&&!old_path[0]) printf("Old path not set\n");
+        else if(!strcmp(dir,"-")){
+            chdir(old_path);
+            strcpy(old_path,curr_dir);
         }
-        else{
-            char curr_dir[strlen(getcwd(NULL,0))];
-            strcpy(curr_dir,getcwd(NULL,0));
-            if(!strcmp(dir,"-")&&isOLDpath=='y'){
-                chdir(old_path);
-            }else if(!strcmp(dir,"~")){
-                char *home=getenv("HOME");
-                chdir(home);
-                isOLDpath='y';
-            }else if(!chdir(dir)){
-                isOLDpath='y';
-            }else{
-                printf("cd to %s failed\n",dir);
-            }
-
-            if(isOLDpath=='y'){
+        //can't go for else{} since if change doesn't happen we then also old_path will updated with curr_dir
+        else if(!strcmp(dir,"~")){
+            //assuming that home is set in environment variable
+            char *home=getenv("HOME");
+            if(strcmp(curr_dir,home)){
+                //isOld='y';
                 strcpy(old_path,curr_dir);
+                chdir(home);
             }
-            free(curr_dir);
         }
-   }
+        else if(!chdir(dir)){
+            //isOld='y';
+            strcpy(old_path,curr_dir);
+        }else{
+            printf("cd to %s failed\n",dir);
+        }
+        free(curr_dir);
+     }
+    
    else{
     printf("%s: command not found\n",input);
    }
